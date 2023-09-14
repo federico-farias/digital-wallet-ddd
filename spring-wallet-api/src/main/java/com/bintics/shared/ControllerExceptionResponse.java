@@ -1,8 +1,6 @@
 package com.bintics.shared;
 
-import com.bintics.shared.BusinessException;
-import com.bintics.shared.NotFoundException;
-import com.bintics.context.customer.application.api.schema.ErrorHttpResponse;
+import com.bintics.module.customer.application.api.schema.ErrorHttpResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
