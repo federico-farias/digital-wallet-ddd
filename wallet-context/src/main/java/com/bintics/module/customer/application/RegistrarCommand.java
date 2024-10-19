@@ -1,11 +1,12 @@
 package com.bintics.module.customer.application;
 
+import com.bintics.shared.Command;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class RegistrarRequest {
+public class RegistrarCommand extends Command {
 
     private String documentNumber;
     private String phoneNumber;
