@@ -22,9 +22,9 @@ public class CustomerConfig {
 
     @Bean
     public CommandBus commandBusImpl(RegistrarHandler registrarUseCase) {
-        List<CommandHandler> commandHandlers = new LinkedList<>();
-        commandHandlers.add(registrarUseCase);
-        return new CommandBusImpl(commandHandlers);
+        var commandBus = new CommandBusImpl();
+        commandBus.add(registrarUseCase);
+        return commandBus;
     }
 
 }

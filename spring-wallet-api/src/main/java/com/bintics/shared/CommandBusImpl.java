@@ -1,30 +1,47 @@
 package com.bintics.shared;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.lang.reflect.Method;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @AllArgsConstructor
+@NoArgsConstructor
 public class CommandBusImpl implements CommandBus {
 
-    private final List<CommandHandler> commandHandlers;
+    private Map<String, CommandHandler> map = new LinkedHashMap<>();
 
     @Override
     public void execute(Command command) {
-        String name = command.getClass().getSimpleName(); // Demo Command
-        System.out.println("CommandBusImpl executed: " + name);
-        for (CommandHandler commandHandler : commandHandlers) {
-            String[] tokens = name.split("Command");
-            String commandName = tokens[0].toLowerCase();
+        var key = command.getClass().getSimpleName();
+        if (map.containsKey(key)) {
+            var handler = map.get(key);
+            handler.execute(command);
+        }
+    }
 
-            String handlerName = commandHandler.getClass().getSimpleName().toLowerCase();
-            String[] handlerTokens = handlerName.split("handler");
-            handlerName = handlerTokens[0];
+    public void add(CommandHandler handler) {
+        var methodsContract = CommandHandler.class.getMethods();
+        if (methodsContract.length != 1) {
+            throw new RuntimeException("no valid interface");
+        }
 
-            if (commandName.equals(handlerName)) {
-                commandHandler.execute(command);
+        var name = methodsContract[0].getName();
+
+        var methods = handler.getClass().getMethods();
+        for (Method method : methods) {
+            if (method.getName().equals(name)) {
+                var params = method.getParameters();
+                if (params.length != 1) {
+                    throw new RuntimeException("no valid param");
+                }
+                var commandName = params[0].getType().getSimpleName();
+                this.map.put(commandName, handler);
                 return;
             }
         }
     }
+
 }
